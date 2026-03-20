@@ -67,11 +67,15 @@ spotbugs {
 }
 
 spotbugsMain {
-    reports.create("html") {
-        required = true
-        outputLocation = file("$buildDir/reports/spotbugs/main.html")
+    // Use the plugin's standard report configuration.
+    // This ensures reports are generated in CI so artifacts can be uploaded.
+    reports {
+        html.required = true
+        xml.required = true
     }
 }
 
-check.dependsOn spotbugsMain
+tasks.named('check') {
+    dependsOn 'spotbugsMain'
+}
 
