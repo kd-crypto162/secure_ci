@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -eu
+
+# Fail-fast: block commits if style rules are violated.
+# This supports Assignment 1 "pre-commit hook or linting tool".
+
+cd "assignment-1/app"
+
+if command -v gradle >/dev/null 2>&1; then
+  gradle --no-daemon checkstyleMain checkstyleTest
+else
+  echo "Gradle not found. Install Gradle or rely on CI checks."
+  echo "Commit allowed, but CI will fail if style/security checks fail."
+fi
+
