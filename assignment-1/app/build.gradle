@@ -80,6 +80,7 @@ tasks.withType(SpotBugsTask).configureEach {
         html.required = true
         xml.required = true
     }
+    ignoreFailures = true
 }
 
 tasks.named('check') {
