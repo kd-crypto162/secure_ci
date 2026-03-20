@@ -1,5 +1,4 @@
 name: Assignment 1 - Secure CI
-
 on:
   pull_request:
     paths:
@@ -10,10 +9,8 @@ on:
     paths:
       - "assignment-1/**"
       - ".github/workflows/assignment-1-ci.yml"
-
 permissions:
   contents: read
-
 jobs:
   build-test-sast:
     name: Build, test, coverage, SAST
@@ -34,13 +31,18 @@ jobs:
       - name: Set up Gradle (with cache)
         uses: gradle/actions/setup-gradle@v4
         with:
-          # This project intentionally does not include a Gradle Wrapper.
-          # Installing Gradle directly ensures CI is deterministic.
+
           gradle-version: '8.11.1'
 
-      # Fail-fast: style checks happen as part of `check`
       - name: Lint + test + coverage + SpotBugs
-        run: gradle --no-daemon check jacocoTestReport
+        shell: bash
+        run: |
+          set +e
+          gradle --no-daemon --console=plain check jacocoTestReport > gradle.log 2>&1
+          code=$?
+          echo "---- gradle.log (last 200 lines) ----"
+          tail -n 200 gradle.log || true
+          exit $code
 
       - name: Upload reports (Checkstyle / JaCoCo / SpotBugs)
         if: always()
@@ -50,7 +52,7 @@ jobs:
           path: |
             assignment-1/app/build/reports/**
             assignment-1/app/build/test-results/**
-
+            assignment-1/app/gradle.log
   docker-build:
     name: Docker build (hardened image)
     runs-on: ubuntu-latest
@@ -72,4 +74,3 @@ jobs:
           file: assignment-1/app/Dockerfile
           push: false
           tags: secureci-app:ci
-
