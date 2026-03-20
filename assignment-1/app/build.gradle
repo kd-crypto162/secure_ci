@@ -52,8 +52,6 @@ jacocoTestReport {
 checkstyle {
     toolVersion = '10.20.2'
     configFile = file('config/checkstyle/checkstyle.xml')
-    // Generate reports, but do not fail the whole build.
-    // This makes CI evidence collection possible even when style issues exist.
     ignoreFailures = true
 }
 
@@ -67,15 +65,10 @@ tasks.withType(Checkstyle).configureEach {
 
 spotbugs {
     toolVersion = '4.8.6'
-    // We still generate reports, but avoid failing the whole build
-    // (so CI artifacts exist for evidence).
+
     ignoreFailures = true
-    // SpotBugs Gradle plugin v6+ expects enum values, not strings.
-    effort = com.github.spotbugs.snom.Effort.MAX
-    reportLevel = com.github.spotbugs.snom.Confidence.LOW
 }
 
-// Configure SpotBugs report outputs reliably across all SpotBugs tasks.
 tasks.withType(SpotBugsTask).configureEach {
     reports {
         html.required = true
