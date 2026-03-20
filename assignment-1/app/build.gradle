@@ -70,8 +70,9 @@ spotbugs {
     // We still generate reports, but avoid failing the whole build
     // (so CI artifacts exist for evidence).
     ignoreFailures = true
-    effort = 'max'
-    reportLevel = 'low'
+    // SpotBugs Gradle plugin v6+ expects enum values, not strings.
+    effort = com.github.spotbugs.snom.Effort.MAX
+    reportLevel = com.github.spotbugs.snom.Confidence.LOW
 }
 
 // Configure SpotBugs report outputs reliably across all SpotBugs tasks.
