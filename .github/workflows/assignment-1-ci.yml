@@ -1,4 +1,5 @@
 name: Assignment 1 - Secure CI
+
 on:
   pull_request:
     paths:
